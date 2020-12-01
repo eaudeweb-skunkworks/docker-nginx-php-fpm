@@ -36,8 +36,10 @@ RUN apk add --no-cache --update nginx supervisor py3-pip py3-setuptools bzip2 li
 COPY php/php.ini /usr/local/etc/php/php.ini
 COPY php/www.conf /usr/local/etc/php-fpm.d/www.conf
 COPY php/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf
-
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
+
+COPY composer-install.sh /tmp/composer-install.sh
+RUN  /tmp/composer-install.sh
 
 # Supervisor config
 COPY ./supervisord.conf /etc/supervisord.conf
