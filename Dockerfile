@@ -43,3 +43,6 @@ RUN  /tmp/composer-install.sh
 
 # Supervisor config
 COPY ./supervisord.conf /etc/supervisord.conf
+
+# Patch supervisor issue
+RUN apk add --no-cache patch && cd /tmp && wget https://patch-diff.githubusercontent.com/raw/coderanger/supervisor-stdout/pull/18.patch && cd /usr/lib/python3.8/site-packages/ && patch -p1 < /tmp/18.patch && rm /tmp/18.patch
