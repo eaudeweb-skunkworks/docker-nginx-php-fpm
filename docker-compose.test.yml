@@ -2,10 +2,10 @@ version: "3.5"
 
 services:
   sut:
-    image: cristiroma/nginx-php-fpm:php73
-    #build:
-    #  context: .
-    container_name: php73
+    # image: cristiroma/nginx-php-fpm:php73
+    # container_name: php73
+    build:
+      context: .
     environment:
       - php_expose_php="Off"
       - php_max_file_uploads="120"
