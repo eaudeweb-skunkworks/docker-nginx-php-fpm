@@ -42,8 +42,7 @@ RUN chmod +x /docker-entrypoint && \
     rm -rf /tmp/* /var/cache/apk/* && \
     apk del .memcached-deps .phpize-deps .php-ext-deps
 
-ENV php_memory_limit="1024M" php_max_input_vars="10000" php_max_execution_time="120" \
-    php_upload_max_filesize="128M" php_max_file_uploads="20" post_max_size="512M" \
-    php_max_file_uploads="20" php_post_max_size="256M" php_expose_php="On" php_log_errors="On"
+ENV php_expose_php="On" php_max_execution_time="120" php_max_file_uploads="20" php_max_input_vars="10000" \
+    php_log_errors="On" php_memory_limit="1024M" php_post_max_size="512M" php_upload_max_filesize="128M"
 
 ENTRYPOINT ["/docker-entrypoint"]
