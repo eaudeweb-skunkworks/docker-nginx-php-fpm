@@ -4,9 +4,15 @@ LABEL maintainer="Cristian Romanescu <cristian.romanescu@eaudeweb.ro>"
 
 EXPOSE 80
 
-ENTRYPOINT ["supervisord", "--nodaemon", "--configuration", "/etc/supervisord.conf"]
+COPY php/www.conf /usr/local/etc/php-fpm.d/www.conf
+COPY php/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf
+COPY nginx/nginx.conf /etc/nginx/nginx.conf
+COPY composer-install.sh /tmp/composer-install.sh
+COPY ./supervisord.conf /etc/supervisord.conf
+COPY docker-entrypoint /docker-entrypoint
 
-RUN apk add --no-cache --update nginx supervisor py3-pip py3-setuptools bzip2 libpng libjpeg-turbo libwebp freetype gettext libzip openldap libmemcached icu libxml2 cyrus-sasl imap-dev && \
+RUN chmod +x /docker-entrypoint && \
+    apk add --no-cache --update nginx supervisor py3-pip py3-setuptools bzip2 libpng libjpeg-turbo libwebp freetype gettext libzip openldap libmemcached icu libxml2 cyrus-sasl imap-dev && \
     apk add --no-cache --update --virtual .php-ext-deps bzip2-dev cyrus-sasl-dev freetype-dev gettext-dev git icu icu-dev krb5-dev libjpeg-turbo-dev libmemcached-dev libpng-dev libwebp-dev openssl-dev libxml2-dev libzip-dev openldap-dev zlib-dev && \
     pip install wheel git+https://github.com/coderanger/supervisor-stdout && \
     docker-php-ext-configure gd --with-webp-dir=/usr/include/ --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ && \
@@ -30,19 +36,14 @@ RUN apk add --no-cache --update nginx supervisor py3-pip py3-setuptools bzip2 li
     ) && \
     # Enable PHP extensions
     docker-php-ext-enable igbinary memcached && \
+    /tmp/composer-install.sh && \
+    # Patch supervisor issue
+    apk add --no-cache patch && cd /tmp && wget https://patch-diff.githubusercontent.com/raw/coderanger/supervisor-stdout/pull/18.patch && cd /usr/lib/python3.8/site-packages/ && patch -p1 < /tmp/18.patch && rm /tmp/18.patch && \
     rm -rf /tmp/* /var/cache/apk/* && \
     apk del .memcached-deps .phpize-deps .php-ext-deps
 
-COPY php/php.ini /usr/local/etc/php/php.ini
-COPY php/www.conf /usr/local/etc/php-fpm.d/www.conf
-COPY php/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf
-COPY nginx/nginx.conf /etc/nginx/nginx.conf
+ENV php_memory_limit="1024M" php_max_input_vars="10000" php_max_execution_time="120" \
+    php_upload_max_filesize="128M" php_max_file_uploads="20" post_max_size="512M" \
+    php_max_file_uploads="20" php_post_max_size="256M" php_expose_php="On" php_log_errors="On"
 
-COPY composer-install.sh /tmp/composer-install.sh
-RUN  /tmp/composer-install.sh
-
-# Supervisor config
-COPY ./supervisord.conf /etc/supervisord.conf
-
-# Patch supervisor issue
-RUN apk add --no-cache patch && cd /tmp && wget https://patch-diff.githubusercontent.com/raw/coderanger/supervisor-stdout/pull/18.patch && cd /usr/lib/python3.8/site-packages/ && patch -p1 < /tmp/18.patch && rm /tmp/18.patch
+ENTRYPOINT ["/docker-entrypoint"]
