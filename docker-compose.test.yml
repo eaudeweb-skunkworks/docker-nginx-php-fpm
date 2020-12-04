@@ -1,0 +1,19 @@
+version: "3.5"
+
+services:
+  sut:
+    image: cristiroma/nginx-php-fpm:php73
+    #build:
+    #  context: .
+    container_name: php73
+    environment:
+      - php_expose_php="Off"
+      - php_max_file_uploads="120"
+      - php_max_input_vars="10"
+      - php_log_errors="On"
+      - php_memory_limit="1G"
+      - php_post_max_size="1G"
+      - php_upload_max_filesize="1G"
+    volumes:
+      - ./test.sh:/test.sh
+    entrypoint: "/test.sh"
