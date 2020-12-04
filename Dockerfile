@@ -7,6 +7,7 @@ EXPOSE 80
 COPY php/www.conf /usr/local/etc/php-fpm.d/www.conf
 COPY php/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
+COPY nginx/default.conf /etc/nginx/conf.d/default.conf
 COPY composer-install.sh /tmp/composer-install.sh
 COPY ./supervisord.conf /etc/supervisord.conf
 COPY docker-entrypoint /docker-entrypoint
