@@ -4,6 +4,11 @@ LABEL maintainer="Cristian Romanescu cristian.romanescu@eaudeweb.ro"
 
 EXPOSE 80
 
+WORKDIR /usr/share/nginx/html/
+
+ENV php_expose_php="On" php_max_execution_time="120" php_max_file_uploads="20" php_max_input_vars="10000" \
+    php_log_errors="On" php_memory_limit="1024M" php_post_max_size="512M" php_upload_max_filesize="128M"
+
 COPY php/www.conf /usr/local/etc/php-fpm.d/www.conf
 COPY php/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
@@ -42,8 +47,5 @@ RUN chmod +x /docker-entrypoint && \
     apk add --no-cache patch && cd /tmp && wget https://patch-diff.githubusercontent.com/raw/coderanger/supervisor-stdout/pull/18.patch && cd /usr/lib/python3.8/site-packages/ && patch -p1 < /tmp/18.patch && rm /tmp/18.patch && \
     rm -rf /tmp/* /var/cache/apk/* && \
     apk del .memcached-deps .phpize-deps .php-ext-deps
-
-ENV php_expose_php="On" php_max_execution_time="120" php_max_file_uploads="20" php_max_input_vars="10000" \
-    php_log_errors="On" php_memory_limit="1024M" php_post_max_size="512M" php_upload_max_filesize="128M"
 
 ENTRYPOINT ["/docker-entrypoint"]
