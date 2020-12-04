@@ -1,6 +1,6 @@
 FROM php:7.3-fpm-alpine3.12
 
-LABEL maintainer="Cristian Romanescu <cristian.romanescu@eaudeweb.ro>"
+LABEL maintainer="Cristian Romanescu cristian.romanescu@eaudeweb.ro"
 
 EXPOSE 80
 
