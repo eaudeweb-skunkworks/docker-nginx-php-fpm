@@ -7,4 +7,12 @@ for var in $(env | grep 'php_'); do
   echo "$var1" >> /usr/local/etc/php/conf.d/php-ini-overrides.ini
 done
 
+# Fix permissions on private storage
+if [ -d "/data/private" ]; then
+  chown -R www-data:www-data /data/private
+fi
+
+# Fix permissions on public storage for multisite installations
+find /usr/share/nginx/html/web/sites/ -name files -exec chown -R www-data:www-data {} \+
+
 supervisord --nodaemon --configuration /etc/supervisord.conf
