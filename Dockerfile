@@ -25,7 +25,7 @@ RUN chmod +x /docker-entrypoint && \
     apk add --no-cache --update nginx supervisor py3-pip py3-setuptools bzip2 libpng libjpeg-turbo libwebp freetype gettext libzip openldap libmemcached icu libxml2 cyrus-sasl imap-dev mysql-client && \
     apk add --no-cache --update --virtual .php-ext-deps bzip2-dev cyrus-sasl-dev freetype-dev gettext-dev git icu icu-dev krb5-dev libjpeg-turbo-dev libmemcached-dev libpng-dev libwebp-dev openssl-dev libxml2-dev libzip-dev openldap-dev zlib-dev && \
     pip install wheel git+https://github.com/coderanger/supervisor-stdout && \
-    docker-php-ext-configure gd --with-webp-dir=/usr/include/ --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ && \
+    docker-php-ext-configure gd --with-webp=/usr/include/ --with-freetype=/usr/include/ --with-jpeg=/usr/include/ && \
     docker-php-ext-configure intl && \
     docker-php-ext-configure imap --with-kerberos --with-imap-ssl && \
     docker-php-ext-configure ldap --with-libdir=lib/ && \
