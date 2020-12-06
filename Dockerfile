@@ -1,4 +1,4 @@
-FROM php:7.3-fpm-alpine3.12
+FROM php:7.4-fpm-alpine3.12
 
 LABEL maintainer="Cristian Romanescu cristian.romanescu@eaudeweb.ro"
 
