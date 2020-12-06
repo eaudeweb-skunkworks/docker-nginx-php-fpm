@@ -6,16 +6,20 @@ EXPOSE 80
 
 WORKDIR /usr/share/nginx/html/
 
+ARG APCU_VERSION=5.1.19
+
 ENV php_expose_php="On" php_max_execution_time="120" php_max_file_uploads="20" php_max_input_vars="10000" \
     php_log_errors="On" php_memory_limit="1024M" php_post_max_size="512M" php_upload_max_filesize="128M"
 
 COPY php/www.conf /usr/local/etc/php-fpm.d/www.conf
 COPY php/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf
+COPY php/php.ini /usr/local/etc/php/php.ini
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
 COPY nginx/default.conf /etc/nginx/conf.d/default.conf
 COPY composer-install.sh /tmp/composer-install.sh
 COPY ./supervisord.conf /etc/supervisord.conf
 COPY docker-entrypoint /docker-entrypoint
+
 
 RUN chmod +x /docker-entrypoint && \
     apk add --no-cache --update nginx supervisor py3-pip py3-setuptools bzip2 libpng libjpeg-turbo libwebp freetype gettext libzip openldap libmemcached icu libxml2 cyrus-sasl imap-dev mysql-client && \
@@ -29,7 +33,7 @@ RUN chmod +x /docker-entrypoint && \
     apk add --no-cache --update --virtual .phpize-deps $PHPIZE_DEPS && \
     apk add --no-cache --update --virtual .memcached-deps && \
     # Install igbinary (memcached's deps)
-    pecl install igbinary && \
+    pecl install igbinary apcu-${APCU_VERSION} && \
     # Install memcached
     ( \
         pecl install --nobuild memcached && \
@@ -41,11 +45,12 @@ RUN chmod +x /docker-entrypoint && \
         cd /tmp/ \
     ) && \
     # Enable PHP extensions
-    docker-php-ext-enable igbinary memcached && \
+    docker-php-ext-enable apcu igbinary memcached && \
     /tmp/composer-install.sh && \
     # Patch supervisor issue
     apk add --no-cache patch && cd /tmp && wget https://patch-diff.githubusercontent.com/raw/coderanger/supervisor-stdout/pull/18.patch && cd /usr/lib/python3.8/site-packages/ && patch -p1 < /tmp/18.patch && rm /tmp/18.patch && \
     rm -rf /tmp/* /var/cache/apk/* && \
     apk del .memcached-deps .phpize-deps .php-ext-deps
+
 
 ENTRYPOINT ["/docker-entrypoint"]

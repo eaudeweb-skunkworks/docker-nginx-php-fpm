@@ -4,7 +4,7 @@ set -e
 
 for var in $(env | grep 'php_'); do
   var1=$(echo "$var" | sed 's/php_//g')
-  echo "$var1" >> /usr/local/etc/php/conf.d/php-ini-overrides.ini
+  echo "$var1" >> /usr/local/etc/php/php.ini
 done
 
 # Fix permissions on private storage

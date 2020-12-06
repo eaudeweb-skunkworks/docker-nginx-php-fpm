@@ -12,6 +12,12 @@ Extensions: `bz2`, `gd`, `gettext`, `imap`, `intl`, `ldap`, `mysqli`, `opcache`,
 # docker run -it --rm --name php73 -e php_memory_limit=2048M cristiroma/nginx-php-fpm:php73
 ```
 
+# Running tests locally before commit
+
+```
+docker-compose -f docker-compose.test.yml up
+```
+
 # docker-compose.yml example
 
 See `docker-compose.test.yml`

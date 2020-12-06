@@ -15,5 +15,5 @@ services:
       - php_post_max_size="1G"
       - php_upload_max_filesize="1G"
     volumes:
-      - ./test.sh:/test.sh
-    entrypoint: "/test.sh"
+      - ./docker-entrypoint-test:/docker-entrypoint-test
+    entrypoint: "/docker-entrypoint-test"
