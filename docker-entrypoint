@@ -13,6 +13,8 @@ if [ -d "/data/private" ]; then
 fi
 
 # Fix permissions on public storage for multisite installations
-find /usr/share/nginx/html/web/sites/ -name files -exec chown -R www-data:www-data {} \+
+if [ -d "/usr/share/nginx/html/web/sites" ]; then
+  find /usr/share/nginx/html/web/sites/ -name files -exec chown -R www-data:www-data {} \+
+fi
 
 supervisord --nodaemon --configuration /etc/supervisord.conf
