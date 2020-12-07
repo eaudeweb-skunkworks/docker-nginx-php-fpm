@@ -17,4 +17,10 @@ if [ -d "/usr/share/nginx/html/web/sites" ]; then
   find /usr/share/nginx/html/web/sites/ -name files -exec chown -R www-data:www-data {} \+
 fi
 
+if [[ "${CRON_SCHEDULE_COMMAND}" ]] && [[ ! -f /usr/share/nginx/html/cron.installed ]]; then
+  echo "Installing custom CRON job"
+  echo "${CRON_SCHEDULE_COMMAND}" | sed -e 's/^"//g;s/"$//g' >> /etc/crontabs/root
+  ln -s /etc/crontabs/root /usr/share/nginx/html/cron.installed
+fi
+
 supervisord --nodaemon --configuration /etc/supervisord.conf
