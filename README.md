@@ -18,6 +18,16 @@ Extensions: `bz2`, `gd`, `gettext`, `imap`, `intl`, `ldap`, `mysqli`, `opcache`,
 docker-compose -f docker-compose.test.yml up
 ```
 
-# docker-compose.yml example
+# Using the image
+
+## docker-compose.yml example
 
 See `docker-compose.test.yml`
+
+## Installing a CRON job
+
+When starting, the image looks into environment for variable `CRON_SCHEDULE_COMMAND` and installs the job  into `/etc/crontabs/root`. Example:
+
+```dotenv
+CRON_SCHEDULE_COMMAND="* * * * * cd /usr/share/nginx/html && sudo -E -u www-data ./vendor/bin/drush core:cron --uri=${DRUPAL_URL}"
+```
