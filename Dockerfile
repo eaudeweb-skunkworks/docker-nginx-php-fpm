@@ -22,7 +22,7 @@ COPY supervisord.conf /etc/supervisord.conf
 
 RUN chmod +x /docker-entrypoint && \
     apk add --no-cache --update --virtual .phpize-deps $PHPIZE_DEPS && \
-    apk add --no-cache --update nginx apache2-utils bash supervisor py3-pip py3-setuptools bzip2 libpng libjpeg-turbo libwebp freetype gettext libzip openldap libmemcached icu libxml2 cyrus-sasl imap-dev mysql-client && \
+    apk add --no-cache --update nginx apache2-utils sudo bash supervisor py3-pip py3-setuptools bzip2 libpng libjpeg-turbo libwebp freetype gettext libzip openldap libmemcached icu libxml2 cyrus-sasl imap-dev mysql-client && \
     apk add --no-cache --update --virtual .php-ext-deps bzip2-dev cyrus-sasl-dev freetype-dev gettext-dev git icu icu-dev krb5-dev libjpeg-turbo-dev libmemcached-dev libpng-dev libwebp-dev openssl-dev libxml2-dev libzip-dev openldap-dev zlib-dev && \
     pip install wheel git+https://github.com/coderanger/supervisor-stdout && \
     docker-php-ext-configure gd --with-webp-dir=/usr/include/ --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ && \
