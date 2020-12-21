@@ -30,4 +30,6 @@ When starting, the image looks into environment for variable `CRON_SCHEDULE_COMM
 
 ```dotenv
 CRON_SCHEDULE_COMMAND="* * * * * cd /usr/share/nginx/html && sudo -E -u www-data ./vendor/bin/drush core:cron --uri=${DRUPAL_URL}"
+CRON_SCHEDULE_COMMAND1="*/30 * * * * cd /usr/share/nginx/html && sudo -E -u www-data ./vendor/bin/drush core:cron --uri=${DRUPAL_URL}"
+CRON_SCHEDULE_COMMAND2="* * * * * cd /usr/share/nginx/html && sudo -E -u www-data ./vendor/bin/drush core:cron --uri=${DRUPAL_URL}"
 ```
