@@ -1,4 +1,4 @@
-FROM php:7.4-fpm-alpine3.12
+FROM php:5.6-fpm-alpine3.8
 
 LABEL maintainer="Cristian Romanescu cristian.romanescu@eaudeweb.ro"
 
@@ -22,33 +22,17 @@ COPY supervisord.conf /etc/supervisord.conf
 
 RUN chmod +x /docker-entrypoint && \
     apk add --no-cache --update --virtual .phpize-deps $PHPIZE_DEPS && \
-    apk add --no-cache --update nginx supervisor py3-pip py3-setuptools bzip2 libpng libjpeg-turbo libwebp freetype gettext libzip openldap libmemcached icu libxml2 cyrus-sasl imap-dev mysql-client && \
-    apk add --no-cache --update --virtual .php-ext-deps bzip2-dev cyrus-sasl-dev freetype-dev gettext-dev git icu icu-dev krb5-dev libjpeg-turbo-dev libmemcached-dev libpng-dev libwebp-dev openssl-dev libxml2-dev libzip-dev openldap-dev zlib-dev && \
-    pip install wheel git+https://github.com/coderanger/supervisor-stdout && \
-    docker-php-ext-configure gd --with-webp-dir=/usr/include/ --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ && \
+    apk add --no-cache --update nginx apache2-utils sudo bash py-pip py3-pip py3-setuptools bzip2 libmcrypt libpng libjpeg-turbo libvpx libvpx-dev libwebp freetype gettext libzip openldap libmemcached icu libxml2 cyrus-sasl imap-dev mysql-client && \
+    apk add --no-cache --update --virtual .php-ext-deps libbz2 bzip2-dev cyrus-sasl-dev freetype-dev gettext-dev git icu icu-dev krb5-dev libjpeg-turbo-dev libmcrypt-dev libmemcached-dev libpng-dev libwebp-dev libressl-dev libxml2-dev libzip-dev openldap-dev zlib-dev && \
+    python3 -m pip install --upgrade pip && \
+    docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-vpx-dir=/usr/include && \
     docker-php-ext-configure intl && \
     docker-php-ext-configure imap --with-kerberos --with-imap-ssl && \
     docker-php-ext-configure ldap --with-libdir=lib/ && \
-    docker-php-ext-install -j$(nproc) bz2 gd gettext imap intl ldap mysqli opcache pdo_mysql sockets xmlrpc zip && \
-    # Install igbinary (memcached's deps)
-    pecl install igbinary apcu-${APCU_VERSION} && \
-    # Install memcached
-    ( \
-        pecl install --nobuild memcached && \
-        cd "$(pecl config-get temp_dir)/memcached" && \
-        phpize && \
-        ./configure --enable-memcached-igbinary && \
-        make -j$(nproc) && \
-        make install && \
-        cd /tmp/ \
-    ) && \
-    # Enable PHP extensions
-    docker-php-ext-enable apcu igbinary memcached && \
-    /tmp/composer-install.sh && \
-    # Patch supervisor issue
-    apk add --no-cache patch && cd /tmp && wget https://patch-diff.githubusercontent.com/raw/coderanger/supervisor-stdout/pull/18.patch && cd /usr/lib/python3.8/site-packages/ && patch -p1 < /tmp/18.patch && rm /tmp/18.patch && \
-    rm -rf /tmp/* /var/cache/apk/* && \
-    apk del .phpize-deps .php-ext-deps
-
+    docker-php-ext-install -j$(nproc) bz2 gd gettext imap intl ldap mcrypt mysqli opcache pdo_mysql sockets xmlrpc zip && \
+    pecl install memcached-2.2.0 igbinary-2.0.8 && docker-php-ext-enable igbinary memcached && \
+    /tmp/composer-install.sh && composer self-update --1 && \
+    apk add --no-cache patch && pip3 install supervisor wheel git+https://github.com/coderanger/supervisor-stdout && cd /tmp && wget https://patch-diff.githubusercontent.com/raw/coderanger/supervisor-stdout/pull/18.patch && cd /usr/lib/python3.6/site-packages/ && patch -p1 < /tmp/18.patch && rm /tmp/18.patch && \
+    rm -rf /tmp/* /var/cache/apk/* && apk del .phpize-deps .php-ext-deps
 
 ENTRYPOINT ["/docker-entrypoint"]

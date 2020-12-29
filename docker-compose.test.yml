@@ -2,8 +2,8 @@ version: "3.5"
 
 services:
   sut:
-    # image: cristiroma/nginx-php-fpm:php73
-    # container_name: php73
+    # image: cristiroma/nginx-php-fpm:php56
+    # container_name: php56
     build:
       context: .
     environment:
