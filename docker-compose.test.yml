@@ -7,14 +7,7 @@ services:
     build:
       context: .
     environment:
-      - php_expose_php="Off"
-      - php_max_file_uploads="120"
-      - php_max_input_vars="10"
-      - php_log_errors="On"
-      - php_memory_limit="1G"
-      - php_post_max_size="1G"
-      - php_upload_max_filesize="1G"
-      - php_date_timezone=Europe/Bucharest
+      - PHP_INI_OVERRIDES=expose_php=Off;max_execution_time=120;max_file_uploads=120;max_input_vars=10;log_errors=Off;memory_limit=1G;post_max_size=1G;upload_max_filesize=1G;date.timezone=Europe/Bucharest
       - CRON_SCHEDULE_COMMAND="* * * * * sudo -u www-data /bin/echo CRON_COMMAND_1"
       - CRON_SCHEDULE_COMMAND1="* * * * * sudo -u www-data /bin/echo CRON_COMMAND_2"
       - CRON_SCHEDULE_COMMAND2="* * * * * sudo -u www-data /bin/echo CRON_COMMAND_3"

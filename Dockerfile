@@ -8,9 +8,7 @@ WORKDIR /usr/share/nginx/html/
 
 ARG APCU_VERSION=5.1.19
 
-ENV php_expose_php="On" php_max_execution_time="120" php_max_file_uploads="20" php_max_input_vars="10000" \
-    php_log_errors="On" php_memory_limit="1024M" php_post_max_size="512M" php_upload_max_filesize="128M" \
-    php_date_timezone="UTC"
+ENV PHP_INI_OVERRIDES="expose_php=On;max_execution_time=120;max_file_uploads=20;max_input_vars=10000;log_errors=On;memory_limit=1024M;post_max_size=512M;upload_max_filesize=128M;date.timezone=UTC"
 
 COPY composer-install.sh /tmp/composer-install.sh
 COPY docker-entrypoint /docker-entrypoint
