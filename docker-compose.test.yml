@@ -14,6 +14,7 @@ services:
       - php_memory_limit="1G"
       - php_post_max_size="1G"
       - php_upload_max_filesize="1G"
+      - php_date_timezone=Europe/Bucharest
     volumes:
       - ./docker-entrypoint-test:/docker-entrypoint-test
     entrypoint: "/docker-entrypoint-test"
