@@ -15,7 +15,10 @@ Extensions: `bz2`, `gd`, `gettext`, `imap`, `intl`, `ldap`, `mysqli`, `opcache`,
 # Running tests locally before commit
 
 ```
+# Modify the docker-compose.test.yml to use the docker image and comment "build: context"
+./build.sh
 docker-compose -f docker-compose.test.yml up
+# Modify back docker-compose.test.yml to use the "build: context"
 ```
 
 # docker-compose.yml example
