@@ -22,3 +22,7 @@ php -i | grep 'opcache.max_accelerated_files => 16229'
 php -i | grep 'opcache.validate_timestamps => On'
 php -i | grep 'opcache.revalidate_freq => 60'
 php -i | grep 'date.timezone => Europe/Bucharest'
+
+if ! grep -q CRON_COMMAND_1 /etc/crontabs/root; then echo "ERROR: CRON_COMMAND_1 not found"; exit 1; else echo "CRON_COMMAND_1 found"; fi
+if ! grep -q CRON_COMMAND_2 /etc/crontabs/root; then echo "ERROR: CRON_COMMAND_2 not found"; exit 1; else echo "CRON_COMMAND_2 found"; fi
+if ! grep -q CRON_COMMAND_3 /etc/crontabs/root; then echo "ERROR: CRON_COMMAND_3 not found"; exit 1; else echo "CRON_COMMAND_3 found"; fi
