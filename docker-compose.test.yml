@@ -14,6 +14,7 @@ services:
       - php_memory_limit="1G"
       - php_post_max_size="1G"
       - php_upload_max_filesize="1G"
+      - php_date_timezone=Europe/Bucharest
       - CRON_SCHEDULE_COMMAND="* * * * * sudo -u www-data /bin/echo CRON_COMMAND_1"
       - CRON_SCHEDULE_COMMAND1="* * * * * sudo -u www-data /bin/echo CRON_COMMAND_2"
       - CRON_SCHEDULE_COMMAND2="* * * * * sudo -u www-data /bin/echo CRON_COMMAND_3"
