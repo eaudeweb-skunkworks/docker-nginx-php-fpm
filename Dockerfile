@@ -44,8 +44,6 @@ RUN chmod +x /docker-entrypoint && \
     # Enable PHP extensions
     docker-php-ext-enable apcu igbinary memcached && \
     /tmp/composer-install.sh && \
-    # Patch supervisor issue
-    apk add --no-cache patch && cd /tmp && wget https://patch-diff.githubusercontent.com/raw/coderanger/supervisor-stdout/pull/18.patch && cd /usr/lib/python3.8/site-packages/ && patch -p1 < /tmp/18.patch && rm /tmp/18.patch && \
     apk del .phpize-deps .php-ext-deps && \
     rm -rf /tmp/* /var/cache/apk/*
 
