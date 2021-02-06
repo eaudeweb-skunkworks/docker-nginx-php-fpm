@@ -31,7 +31,7 @@ RUN chmod +x /docker-entrypoint && \
     docker-php-ext-install -j$(nproc) bz2 gd gettext imap intl ldap mcrypt mysqli opcache pdo_mysql sockets xmlrpc zip && \
     pecl install memcached-2.2.0 igbinary-2.0.8 && docker-php-ext-enable igbinary memcached && \
     /tmp/composer-install.sh && composer self-update --1 && \
-    apk add --no-cache patch && pip3 install supervisor wheel git+https://github.com/coderanger/supervisor-stdout && cd /tmp && wget https://patch-diff.githubusercontent.com/raw/coderanger/supervisor-stdout/pull/18.patch && cd /usr/lib/python3.6/site-packages/ && patch -p1 < /tmp/18.patch && rm /tmp/18.patch && \
+    pip3 install supervisor wheel git+https://github.com/coderanger/supervisor-stdout && \
     rm -rf /tmp/* /var/cache/apk/* && apk del .phpize-deps .php-ext-deps
 
 ENTRYPOINT ["/docker-entrypoint"]
