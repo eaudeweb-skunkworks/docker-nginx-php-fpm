@@ -41,10 +41,9 @@ RUN chmod +x /docker-entrypoint && \
         make install && \
         cd /tmp/ \
     ) && \
-    pecl install imagick \
+    pecl install imagick && \
     # Enable PHP extensions
-    docker-php-ext-enable apcu igbinary memcached && \
-    docker-php-ext-enable imagick && \
+    docker-php-ext-enable apcu igbinary memcached imagick && \
     /tmp/composer-install.sh && \
     rm -rf /tmp/* /var/cache/apk/* && \
     apk del .phpize-deps .php-ext-deps
