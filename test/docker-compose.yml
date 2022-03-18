@@ -1,0 +1,7 @@
+version: '3.3'
+
+services:
+
+  php74:
+    image: test-nginx-php-fpm:php74
+    container_name: php74
