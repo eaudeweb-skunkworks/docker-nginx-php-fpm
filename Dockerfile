@@ -18,6 +18,8 @@ COPY php/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf
 COPY nginx/default.conf /etc/nginx/conf.d/default.conf
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
 COPY supervisord.conf /etc/supervisord.conf
+COPY memcached-2.2.0.tgz /tmp/memcached-2.2.0.tgz
+COPY igbinary-2.0.8.tgz /tmp/igbinary-2.0.8.tgz
 
 RUN chmod +x /docker-entrypoint && \
     apk add --no-cache --update --virtual .phpize-deps $PHPIZE_DEPS && \
@@ -29,7 +31,7 @@ RUN chmod +x /docker-entrypoint && \
     docker-php-ext-configure imap --with-kerberos --with-imap-ssl && \
     docker-php-ext-configure ldap --with-libdir=lib/ && \
     docker-php-ext-install -j$(nproc) bz2 gd gettext imap intl ldap mcrypt mysqli opcache pdo_mysql sockets xmlrpc zip && \
-    pecl install memcached-2.2.0 igbinary-2.0.8 && docker-php-ext-enable igbinary memcached && \
+    pecl install /tmp/memcached-2.2.0.tgz /tmp/igbinary-2.0.8.tgz && docker-php-ext-enable igbinary memcached && \
     /tmp/composer-install.sh && composer self-update --1 && \
     pip3 install supervisor wheel git+https://github.com/coderanger/supervisor-stdout && \
     rm -rf /tmp/* /var/cache/apk/* && apk del .phpize-deps .php-ext-deps
