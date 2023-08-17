@@ -9,7 +9,7 @@ Extensions: `bz2`, `gd`, `gettext`, `imap`, `intl`, `ldap`, `mysqli`, `opcache`,
 
 ```shell
 # ./build.sh
-# docker run -it --rm --name php80 -e php_memory_limit=2048M cristiroma/nginx-php-fpm:php80
+# docker run -it --rm --name php81 -e php_memory_limit=2048M cristiroma/nginx-php-fpm:php81
 ```
 
 # Running tests locally before commit

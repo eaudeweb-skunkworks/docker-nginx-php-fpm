@@ -1,4 +1,4 @@
-FROM php:8.0-fpm-alpine3.12
+FROM php:8.1-fpm-alpine3.18
 
 LABEL maintainer="Cristian Romanescu cristian.romanescu@eaudeweb.ro"
 
@@ -6,7 +6,7 @@ EXPOSE 80
 
 WORKDIR /usr/share/nginx/html/
 
-ARG APCU_VERSION=5.1.19
+ARG APCU_VERSION=5.1.22
 
 ENV PHP_INI_OVERRIDES="expose_php=On;max_execution_time=120;max_file_uploads=20;max_input_vars=10000;log_errors=On;memory_limit=1024M;post_max_size=512M;upload_max_filesize=128M;date.timezone=UTC"
 
