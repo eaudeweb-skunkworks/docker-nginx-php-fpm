@@ -1,4 +1,4 @@
-FROM php:8.1-fpm-alpine3.18
+FROM php:8.3-alpine
 
 LABEL maintainer="Cristian Romanescu cristian.romanescu@eaudeweb.ro"
 
@@ -21,10 +21,10 @@ COPY supervisord.conf /etc/supervisord.conf
 
 RUN chmod +x /docker-entrypoint && \
     apk add --no-cache --update --virtual .phpize-deps $PHPIZE_DEPS && \
-    apk add --no-cache --update git patch nginx apache2-utils sudo bash supervisor py3-pip py3-setuptools bzip2 libpng libjpeg-turbo libwebp freetype gettext libzip openldap libmemcached icu libxml2 cyrus-sasl imap-dev mysql-client && \
-    apk add --no-cache --update --virtual .php-ext-deps bzip2-dev cyrus-sasl-dev freetype-dev gettext-dev icu icu-dev krb5-dev libjpeg-turbo-dev libmemcached-dev libpng-dev libwebp-dev openssl-dev libxml2-dev libzip-dev openldap-dev zlib-dev && \
-    pip install wheel git+https://github.com/coderanger/supervisor-stdout && \
-    docker-php-ext-configure gd --with-webp=/usr/include/ --with-freetype=/usr/include/ --with-jpeg=/usr/include/ && \
+    apk add --no-cache --update apache2-utils bash bzip2 cyrus-sasl freetype gettext git icu imap-dev libpng libjpeg-turbo libmemcached libwebp libxml2 libzip mysql-client nginx openldap patch py3-pip py3-setuptools sudo supervisor && \
+    apk add --no-cache --update --virtual .php-ext-deps bzip2-dev cyrus-sasl-dev freetype-dev gettext-dev icu icu-dev krb5-dev libjpeg-turbo-dev libmemcached-dev libpng-dev libwebp-dev linux-headers libxml2-dev libzip-dev openldap-dev openssl-dev zlib-dev && \
+pip install --break-system-packages supervisor-stdout && \
+docker-php-ext-configure gd --with-webp=/usr/include/ --with-freetype=/usr/include/ --with-jpeg=/usr/include/ && \
     docker-php-ext-configure intl && \
     docker-php-ext-configure imap --with-kerberos --with-imap-ssl && \
     docker-php-ext-configure ldap --with-libdir=lib/ && \
@@ -46,5 +46,4 @@ RUN chmod +x /docker-entrypoint && \
     /tmp/composer-install.sh && \
     apk del .phpize-deps .php-ext-deps && \
     rm -rf /tmp/* /var/cache/apk/*
-
 ENTRYPOINT ["/docker-entrypoint"]
