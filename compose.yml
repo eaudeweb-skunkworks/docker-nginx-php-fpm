@@ -1,0 +1,14 @@
+services:
+  sut:
+    image: cristiroma/nginx-php-fpm:php83
+    container_name: php83
+    build:
+      context: .
+    environment:
+      - PHP_INI_OVERRIDES=expose_php=Off;error_log=/dev/stdout;max_execution_time=120;max_file_uploads=120;max_input_vars=10;log_errors=On;memory_limit=1G;post_max_size=1G;upload_max_filesize=1G;date.timezone=Europe/Bucharest
+      - CRON_SCHEDULE_COMMAND="* * * * * echo "111" >> /tmp/cronx 2>&1"
+    volumes:
+      - ./docker-entrypoint-test:/docker-entrypoint-test
+    ports:
+      - "127.0.0.1:8333:80"
+#    entrypoint: "/docker-entrypoint-test"

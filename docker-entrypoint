@@ -3,26 +3,29 @@
 set -e
 
 for var in $(echo "$PHP_INI_OVERRIDES" | tr \; \\n); do
-  echo "$var" >> /usr/local/etc/php/php.ini
+    echo "$var" >> /usr/local/etc/php/php.ini
 done
 
 # Fix permissions on private storage
 if [ -d "/data/private" ]; then
-  chown -R www-data:www-data /data/private
+    chown -R www-data:www-data /data/private
 fi
 
 # Fix permissions on public storage for multisite installations
 if [ -d "/usr/share/nginx/html/web/sites" ]; then
-  find /usr/share/nginx/html/web/sites/ -name files -exec chown -R www-data:www-data {} \+
+    find /usr/share/nginx/html/web/sites/ -name files -exec chown -R www-data:www-data {} \+
 fi
 
 tasks=$(env | awk -F= '/[a-zA-Z_][a-zA-Z_0-9]*=/ { if (!system("[ -n \"${" $1 "+y}\" ]")) print $1 }' | grep CRON_SCHEDULE_COMMAND | uniq)
-if [ ! -f /var/run/cron.installed ]; then
-  echo "Installing custom CRON job in /etc/crontabs/root"
-  for task_name in $tasks; do
-    printenv "$task_name" | envsubst | sed -e 's/^"//g;s/"$//g' >> /etc/crontabs/root
-  done
-  ln -s /etc/crontabs/root /var/run/cron.installed
-fi
+echo "Installing CRON jobs in /tmp/cron-jobs"
+echo "# /etc/cron.d/website: Docker container custom CRON jobs\n" > /tmp/cron-jobs
+echo "SHELL=/bin/sh" >> /tmp/cron-jobs
+echo "PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin\n" >> /tmp/cron-jobs
+for task_name in $tasks; do
+    printenv "$task_name" | envsubst | sed -e 's/^"//g;s/"$//g' >> /tmp/cron-jobs
+done
+# echo "#\n" >> /etc/cron.d/website
+# Redirect CRON output to Docker stdout
+# rm -f /var/mail/www-data && ln -sf /dev/fd/1 /var/mail/www-data
 
 supervisord --nodaemon --configuration /etc/supervisord.conf
