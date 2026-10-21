@@ -17,7 +17,7 @@ COPY php/www.conf /usr/local/etc/php-fpm.d/www.conf
 COPY php/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf
 COPY nginx/default.conf /etc/nginx/conf.d/default.conf
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
-# COPY supervisord.conf /etc/supervisord.conf
+COPY supervisord.conf /etc/supervisord.conf
 
 RUN chmod +x /docker-entrypoint && \
     apk add --no-cache --update --virtual .phpize-deps $PHPIZE_DEPS && \
@@ -30,7 +30,7 @@ RUN chmod +x /docker-entrypoint && \
     docker-php-ext-configure ldap --with-libdir=lib/ && \
     docker-php-ext-install -j$(nproc) bz2 gd gettext imap intl ldap mysqli opcache pdo_mysql zip
     # Install igbinary (memcached's deps)
-RUN     printf "no" | pecl install igbinary && \
+RUN     printf "no" | pecl install apcu-${APCU_VERSION} igbinary && \
     # Install memcached
     ( \
         pecl install --nobuild memcached && \
@@ -42,7 +42,7 @@ RUN     printf "no" | pecl install igbinary && \
         cd /tmp/ \
     ) && \
     # Enable PHP extensions
-    docker-php-ext-enable igbinary memcached && \
+    docker-php-ext-enable apcu igbinary memcached && \
     /tmp/composer-install.sh && \
     apk del .phpize-deps .php-ext-deps && \
     rm -rf /tmp/* /var/cache/apk/*
