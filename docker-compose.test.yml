@@ -2,8 +2,8 @@ version: "3.5"
 
 services:
   sut:
-    # image: cristiroma/nginx-php-fpm:php81
-    # container_name: php81
+    # image: cristiroma/nginx-php-fpm:php82
+    # container_name: php82
     build:
       context: .
     environment:

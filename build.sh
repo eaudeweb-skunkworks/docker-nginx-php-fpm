@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-docker build -t cristiroma/nginx-php-fpm:php81 .
+docker build -t cristiroma/nginx-php-fpm:php82 .
