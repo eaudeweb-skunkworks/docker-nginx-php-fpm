@@ -1,4 +1,4 @@
-FROM php:8.3-fpm-bookworm
+FROM php:8.3.37-fpm-bookworm
 
 LABEL maintainer="Cristian Romanescu cristian.romanescu@eaudeweb.ro"
 
